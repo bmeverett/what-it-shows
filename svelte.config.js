@@ -17,6 +17,6 @@ export default {
   kit: {
     adapter: adapter({ pages: 'build', assets: 'build' }),
     alias: { '#lib': 'src/lib' },
-    prerender: { entries: ['/kb'] },
+    prerender: { entries: ['/kb', '/kb/incidents/4471/problems'] },
   },
 };

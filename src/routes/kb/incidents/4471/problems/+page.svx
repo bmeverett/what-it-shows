@@ -1,0 +1,57 @@
+---
+layout: runbook
+title: '#4471 · three problems, not one'
+owner: Brandon Everett
+status: open
+reviewed: 2026-10-29
+signature: Brandon Everett
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const repo = 'https://github.com/bmeverett/what-it-shows/issues';
+</script>
+
+[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. Its reports say otherwise.
+They hold three problems, and the queued parser fix closes only one of them. Each now has its own
+ticket.
+
+<ProblemTable
+  ticket={4471}
+  tickets={{ parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': `${repo}/3` }}
+/>
+
+## The three problems
+
+**`parser`: the shared parser reads dates month first.** Every tenant writes the day first, so
+"7 April" comes out as "4 July". This is the bug #4471 names.
+
+**`hint`: booking-v3 tells people to type the month first.** Its date field says `MM/DD/YYYY`.
+People at day-first tenants on booking-v3 type what the hint says; the form reads it the tenant's
+way, and the date flips. The parser fix leaves this one broken: the hint itself is wrong.
+
+**`one-day`: dates move by a day, not a month.** Tuesday shows as Monday; a client in Lisbon gets
+Tuesday and one in Toronto gets Monday; an invite arrives before its booking. That is a time-zone
+conversion, not a swapped day and month. The desk had noted these reports (`desk-notes.json`), but
+the #4471 page still counts them under `parser`.
+
+<Callout kind="warn">
+Shipping the parser fix and closing #4471 leaves the <code>hint</code> and <code>one-day</code>
+reports with no ticket. Keep each problem on its own ticket until its own fix ships.
+</Callout>
+
+## How the reports were placed
+
+- **One id, one report.** The export pages overlap, so some reports come twice. They count once.
+- **By tenant, not by intake's tag.** Intake guesses from the reporter's browser. The cause
+  depends on the tenant's locale and booking form (`causes.ts`), so this page groups by that.
+- **A one-day move is its own problem.** A report the desk read as a one-day move leaves
+  `parser` and goes under `one-day` (`problems.ts`).
+
+The numbers above are computed from the ticket export at render time; when the desk merges more
+reports, the table follows.
+
+<RenderStamp {signature} />
