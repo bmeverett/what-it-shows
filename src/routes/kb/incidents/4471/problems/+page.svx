@@ -15,32 +15,37 @@ signature: Brandon Everett
   const repo = 'https://github.com/bmeverett/what-it-shows/issues';
 </script>
 
-[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. Its reports say otherwise.
-They hold three problems, and the queued parser fix closes only one of them. Each now has its own
-ticket.
+[#4471](/kb/incidents/4471) was marked known: one issue, one fix queued. Its reports held three
+problems. Engineering closed #4471 on 5 October with the parser fix. That settles two of the three;
+the third is still open.
 
 <ProblemTable
   ticket={4471}
-  tickets={{ parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': `${repo}/3` }}
+  tickets={{
+    parser: { href: `${repo}/1`, state: 'fixed' },
+    hint: { href: `${repo}/2`, state: "won't fix" },
+    'one-day': { href: `${repo}/3`, state: 'open' },
+  }}
 />
 
 ## The three problems
 
-**`parser`: the shared parser reads dates month first.** Every tenant writes the day first, so
-"7 April" comes out as "4 July". This is the bug #4471 names.
+**`parser`: the shared parser read dates month first.** Every tenant writes the day first, so
+"7 April" came out as "4 July". This is the bug #4471 named. Fixed: `fix(dates): parse dd/mm for
+eu locales`.
 
-**`hint`: booking-v3 tells people to type the month first.** Its date field says `MM/DD/YYYY`.
-People at day-first tenants on booking-v3 type what the hint says; the form reads it the tenant's
-way, and the date flips. The parser fix leaves this one broken: the hint itself is wrong.
+**`hint`: booking-v3 told people to type the month first.** Its date field said `MM/DD/YYYY`.
+People at day-first tenants on booking-v3 typed what the hint said; the form read it the tenant's
+way, and the date flipped. The parser fix did not touch this. Won't fix: booking-v3 is retired.
 
 **`one-day`: dates move by a day, not a month.** Tuesday shows as Monday; a client in Lisbon gets
 Tuesday and one in Toronto gets Monday; an invite arrives before its booking. That is a time-zone
-conversion, not a swapped day and month. The desk had noted these reports (`desk-notes.json`), but
-the #4471 page still counts them under `parser`.
+conversion, not a swapped day and month, so the parser fix does not reach it. The desk had noted
+these reports (`desk-notes.json`) and filed them under `parser`.
 
 <Callout kind="warn">
-Shipping the parser fix and closing #4471 leaves the <code>hint</code> and <code>one-day</code>
-reports with no ticket. Keep each problem on its own ticket until its own fix ships.
+#4471 is closed, but <code>one-day</code> is not fixed. Keep its ticket open, and send new
+one-day reports there, not to a closed ticket.
 </Callout>
 
 ## How the reports were placed
@@ -48,8 +53,8 @@ reports with no ticket. Keep each problem on its own ticket until its own fix sh
 - **One id, one report.** The export pages overlap, so some reports come twice. They count once.
 - **By tenant, not by intake's tag.** Intake guesses from the reporter's browser. The cause
   depends on the tenant's locale and booking form (`causes.ts`), so this page groups by that.
-- **A one-day move is its own problem.** A report the desk read as a one-day move leaves
-  `parser` and goes under `one-day` (`problems.ts`).
+- **Counted where the desk filed them.** A report the desk read as a one-day move stays in the
+  `parser` count, as on the #4471 page, and is also counted under `one-day` (`problems.ts`).
 
 The numbers above are computed from the ticket export at render time; when the desk merges more
 reports, the table follows.
