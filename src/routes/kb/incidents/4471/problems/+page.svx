@@ -4,7 +4,7 @@ title: '#4471 · three problems, not one'
 owner: Brandon Everett
 status: open
 reviewed: 2026-10-29
-signature: Brandon Everett
+signature: v1.eyJzdWIiOiI2NTMiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5MzMxODE1MSwiZXhwIjoxNzkzNDA0NTUxfQ.BLQiLfjEWcT48SYfO0ZbBelsoohvahH275elA8XqtdI
 ---
 
 <script>
